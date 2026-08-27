@@ -7,146 +7,141 @@
 <title>PUMPA Driver</title>
 
 <style>
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#eef3f8;
-    color:#17202a;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef3f8;
+    color: #17202a;
 }
 
-header{
-    background:#1976b8;
-    color:white;
-    text-align:center;
-    padding:18px 15px;
+header {
+    background: #1976b9;
+    color: white;
+    text-align: center;
+    padding: 22px 15px;
 }
 
-header h1{
-    margin:0;
-    font-size:25px;
+header h1 {
+    margin: 0;
+    font-size: 27px;
 }
 
-header p{
-    margin:6px 0 0;
-    font-size:14px;
+header p {
+    margin: 7px 0 0;
+    font-size: 15px;
 }
 
-.container{
-    max-width:520px;
-    margin:auto;
-    padding:15px;
+.container {
+    max-width: 650px;
+    margin: auto;
+    padding: 18px;
 }
 
-.card{
-    background:white;
-    border-radius:18px;
-    padding:20px;
-    margin-bottom:15px;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
-.status{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-weight:bold;
-    margin-bottom:15px;
+.status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-.dot{
-    width:12px;
-    height:12px;
-    background:#16a34a;
-    border-radius:50%;
+.dot {
+    width: 14px;
+    height: 14px;
+    background: #19b45b;
+    border-radius: 50%;
 }
 
-button{
-    width:100%;
-    border:0;
-    border-radius:13px;
-    padding:16px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-top:10px;
+button {
+    width: 100%;
+    border: none;
+    border-radius: 13px;
+    padding: 18px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-.start{
-    background:#1976b8;
-    color:white;
+.start {
+    background: #1976b9;
+    color: white;
 }
 
-.finish{
-    background:#e52525;
-    color:white;
+.finish {
+    background: #e52323;
+    color: white;
 }
 
-.location{
-    background:#f8fafc;
+.location {
+    background: #1976b9;
+    color: white;
 }
 
-.location h2,
-.address h2,
-.activity h2{
-    margin-top:0;
+.next {
+    background: #19a954;
+    color: white;
 }
 
-.info{
-    line-height:1.8;
-    font-size:14px;
+button:active {
+    transform: scale(0.98);
 }
 
-input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ccd5df;
-    border-radius:10px;
-    font-size:15px;
-    outline:none;
+h2 {
+    margin-top: 0;
+    font-size: 21px;
 }
 
-input:focus{
-    border-color:#1976b8;
+.info {
+    line-height: 1.8;
+    font-size: 16px;
 }
 
-.next{
-    background:#16a34a;
-    color:white;
+.label {
+    font-weight: bold;
 }
 
-.map{
-    background:#673ab7;
-    color:white;
+.message {
+    padding: 14px;
+    background: #f3f6f9;
+    border-radius: 10px;
+    margin-top: 12px;
+    display: none;
 }
 
-.clear{
-    background:#64748b;
-    color:white;
+.big-time {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin: 12px 0;
 }
 
-.activity-box{
-    padding:12px;
-    background:#f1f5f9;
-    border-radius:10px;
-    margin-top:10px;
-    font-size:14px;
+.destination {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px;
+    background: #eef6ff;
+    border-radius: 12px;
 }
 
-.hidden{
-    display:none;
-}
-
-.message{
-    margin-top:12px;
-    padding:12px;
-    background:#e8f5e9;
-    color:#166534;
-    border-radius:10px;
-    font-weight:bold;
+.footer {
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+    padding: 15px;
 }
 </style>
 </head>
@@ -154,7 +149,7 @@ input:focus{
 <body>
 
 <header>
-    <h1>🚐 PUMPA Driver</h1>
+    <h1>🚌 PUMPA Driver</h1>
     <p>Bog‘cha transporti haydovchisi</p>
 </header>
 
@@ -164,42 +159,46 @@ input:focus{
     <div class="card">
 
         <div class="status">
-            <span class="dot"></span>
+            <span class="dot" id="statusDot"></span>
             <span id="statusText">Yo‘lga tayyor</span>
         </div>
 
         <button class="start" onclick="startTrip()">
-            🚐 YO‘LGA CHIQDIM
+            🚌 YO‘LGA CHIQDIM
         </button>
 
         <button class="finish" onclick="finishTrip()">
             🏁 YO‘LNI YAKUNLASH
         </button>
 
-        <div id="message"></div>
+        <div class="message" id="tripMessage"></div>
 
     </div>
 
 
     <!-- JOYLASHUV -->
-    <div class="card location">
+    <div class="card">
 
-        <h2>📍 Joylashuv</h2>
+        <h2>📍 Joylashuvim</h2>
 
         <div class="info">
-            Latitude:
-            <b id="latitude">Aniqlanmoqda...</b>
-            <br>
+            <div>
+                <span class="label">Latitude:</span>
+                <span id="latitude">Aniqlanmoqda...</span>
+            </div>
 
-            Longitude:
-            <b id="longitude">Aniqlanmoqda...</b>
-            <br>
+            <div>
+                <span class="label">Longitude:</span>
+                <span id="longitude">Aniqlanmoqda...</span>
+            </div>
 
-            GPS holati:
-            <b id="gpsStatus">Ruxsat kutilmoqda</b>
+            <div>
+                <span class="label">GPS holati:</span>
+                <span id="gpsStatus">Ruxsat kutilmoqda</span>
+            </div>
         </div>
 
-        <button class="start" onclick="getLocation()">
+        <button class="location" onclick="getLocation()">
             📍 JOYLASHUVIMNI ANIQLASH
         </button>
 
@@ -207,53 +206,71 @@ input:focus{
 
 
     <!-- KEYINGI MANZIL -->
-    <div class="card address">
+    <div class="card">
 
         <h2>➡️ Keyingi manzil</h2>
 
-        <input
-            id="address"
-            type="text"
-            placeholder="Masalan: Sergeli 5-mavze, 12-uy"
-        >
+        <div class="destination" id="destination">
+            Birinchi manzilni kutmoqda...
+        </div>
 
-        <button class="next" onclick="saveAddress()">
-            💾 MANZILNI SAQLASH
+        <button class="next" onclick="nextDestination()">
+            🚗 KETDIK — KEYINGI MANZIL
         </button>
 
-        <button class="map" onclick="openMap()">
-            🗺️ XARITADA OCHISH
-        </button>
+    </div>
 
-        <button class="clear" onclick="clearAddress()">
-            🗑️ MANZILNI TOZALASH
-        </button>
 
-        <div id="savedAddress" class="activity-box hidden"></div>
+    <!-- VAQT -->
+    <div class="card">
+
+        <h2>🕐 Safar vaqti</h2>
+
+        <div class="big-time" id="tripTime">
+            00:00:00
+        </div>
+
+        <div class="info">
+            <div>
+                <span class="label">Safar holati:</span>
+                <span id="tripStatus">Boshlanmagan</span>
+            </div>
+
+            <div>
+                <span class="label">Bugungi sana:</span>
+                <span id="today"></span>
+            </div>
+        </div>
 
     </div>
 
 
     <!-- FAOLIYAT -->
-    <div class="card activity">
+    <div class="card">
 
         <h2>📋 Faoliyat</h2>
 
-        <div class="activity-box">
-            <b>Holat:</b>
-            <span id="tripStatus">Boshlanmagan</span>
+        <div class="info">
+            <div>
+                🚌 Yo‘lga chiqish:
+                <span id="startTime">—</span>
+            </div>
+
+            <div>
+                🏁 Yo‘lni yakunlash:
+                <span id="finishTime">—</span>
+            </div>
+
+            <div>
+                📍 Joylashuv:
+                <span id="locationCount">0 marta</span>
+            </div>
         </div>
 
-        <div class="activity-box">
-            <b>Yo‘l boshlangan vaqt:</b>
-            <span id="startTime">—</span>
-        </div>
+    </div>
 
-        <div class="activity-box">
-            <b>Yo‘l yakunlangan vaqt:</b>
-            <span id="finishTime">—</span>
-        </div>
-
+    <div class="footer">
+        PUMPA Kids Transport © 2026
     </div>
 
 </div>
@@ -261,272 +278,224 @@ input:focus{
 
 <script>
 
-let currentLatitude = null;
-let currentLongitude = null;
+let tripStarted = false;
+let startTimestamp = null;
+let timerInterval = null;
+let locationCount = 0;
+
+let destinations = [
+    "Bog‘cha",
+    "1-manzil",
+    "2-manzil",
+    "3-manzil",
+    "4-manzil",
+    "Bog‘chaga qaytish"
+];
+
+let destinationIndex = 0;
 
 
-// ============================
-// JOYLASHUV
-// ============================
+/* BUGUNGI SANA */
 
-function getLocation(){
+const now = new Date();
 
-    if(!navigator.geolocation){
+document.getElementById("today").textContent =
+    now.toLocaleDateString("uz-UZ");
 
-        document.getElementById("gpsStatus").innerText =
+
+/* YO‘LGA CHIQISH */
+
+function startTrip() {
+
+    if (tripStarted) {
+        showMessage("Safar allaqachon boshlangan.");
+        return;
+    }
+
+    tripStarted = true;
+
+    startTimestamp = new Date();
+
+    document.getElementById("statusText").textContent =
+        "Yo‘lda";
+
+    document.getElementById("tripStatus").textContent =
+        "Faol";
+
+    document.getElementById("startTime").textContent =
+        startTimestamp.toLocaleTimeString("uz-UZ");
+
+    document.getElementById("destination").textContent =
+        destinations[destinationIndex];
+
+    showMessage("🚌 Safar boshlandi!");
+
+    timerInterval = setInterval(updateTimer, 1000);
+
+    getLocation();
+}
+
+
+/* SAFAR VAQTINI HISOBLASH */
+
+function updateTimer() {
+
+    if (!startTimestamp) return;
+
+    const current = new Date();
+
+    const seconds =
+        Math.floor((current - startTimestamp) / 1000);
+
+    const hours =
+        Math.floor(seconds / 3600);
+
+    const minutes =
+        Math.floor((seconds % 3600) / 60);
+
+    const secs =
+        seconds % 60;
+
+    document.getElementById("tripTime").textContent =
+        String(hours).padStart(2, "0") + ":" +
+        String(minutes).padStart(2, "0") + ":" +
+        String(secs).padStart(2, "0");
+}
+
+
+/* SAFARNI YAKUNLASH */
+
+function finishTrip() {
+
+    if (!tripStarted) {
+        showMessage("Avval YO‘LGA CHIQDIM tugmasini bosing.");
+        return;
+    }
+
+    tripStarted = false;
+
+    clearInterval(timerInterval);
+
+    const finish = new Date();
+
+    document.getElementById("statusText").textContent =
+        "Yo‘l yakunlandi";
+
+    document.getElementById("tripStatus").textContent =
+        "Yakunlangan";
+
+    document.getElementById("finishTime").textContent =
+        finish.toLocaleTimeString("uz-UZ");
+
+    showMessage("🏁 Safar muvaffaqiyatli yakunlandi!");
+
+}
+
+
+/* KEYINGI MANZIL */
+
+function nextDestination() {
+
+    if (!tripStarted) {
+        showMessage("Avval safarni boshlang.");
+        return;
+    }
+
+    destinationIndex++;
+
+    if (destinationIndex >= destinations.length) {
+        destinationIndex = destinations.length - 1;
+    }
+
+    document.getElementById("destination").textContent =
+        destinations[destinationIndex];
+
+    showMessage(
+        "➡️ Keyingi manzil: " +
+        destinations[destinationIndex]
+    );
+
+}
+
+
+/* GPS */
+
+function getLocation() {
+
+    if (!navigator.geolocation) {
+
+        document.getElementById("gpsStatus").textContent =
             "GPS qo‘llab-quvvatlanmaydi";
 
         return;
     }
 
-    document.getElementById("gpsStatus").innerText =
+    document.getElementById("gpsStatus").textContent =
         "Aniqlanmoqda...";
 
     navigator.geolocation.getCurrentPosition(
 
-        function(position){
+        function(position) {
 
-            currentLatitude =
+            const lat =
                 position.coords.latitude;
 
-            currentLongitude =
+            const lon =
                 position.coords.longitude;
 
-            document.getElementById("latitude").innerText =
-                currentLatitude.toFixed(6);
+            document.getElementById("latitude").textContent =
+                lat.toFixed(6);
 
-            document.getElementById("longitude").innerText =
-                currentLongitude.toFixed(6);
+            document.getElementById("longitude").textContent =
+                lon.toFixed(6);
 
-            document.getElementById("gpsStatus").innerText =
-                "GPS ishlayapti ✅";
+            document.getElementById("gpsStatus").textContent =
+                "GPS faol ✅";
+
+            locationCount++;
+
+            document.getElementById("locationCount").textContent =
+                locationCount + " marta";
 
         },
 
-        function(error){
+        function(error) {
 
-            document.getElementById("gpsStatus").innerText =
-                "GPS ruxsati kerak ❌";
+            document.getElementById("gpsStatus").textContent =
+                "GPS ruxsati berilmadi";
+
+            showMessage(
+                "📍 Telefon/brauzer GPS ruxsatini so‘rashi mumkin."
+            );
 
         },
 
         {
-            enableHighAccuracy:true,
-            timeout:10000,
-            maximumAge:0
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
         }
 
     );
 }
 
 
-// ============================
-// YO‘LNI BOSHLASH
-// ============================
+/* XABAR */
 
-function startTrip(){
+function showMessage(text) {
 
-    let now = new Date();
+    const box =
+        document.getElementById("tripMessage");
 
-    let time =
-        now.toLocaleString("uz-UZ");
+    box.textContent = text;
 
-    document.getElementById("statusText").innerText =
-        "Yo‘lda 🚐";
+    box.style.display = "block";
 
-    document.getElementById("tripStatus").innerText =
-        "Yo‘l boshlandi";
-
-    document.getElementById("startTime").innerText =
-        time;
-
-    document.getElementById("finishTime").innerText =
-        "—";
-
-    document.getElementById("message").innerText =
-        "🚐 Yo‘l boshlandi!";
-
-    localStorage.setItem(
-        "pumps_start",
-        time
-    );
+    setTimeout(function() {
+        box.style.display = "none";
+    }, 3500);
 
 }
-
-
-// ============================
-// YO‘LNI YAKUNLASH
-// ============================
-
-function finishTrip(){
-
-    let now = new Date();
-
-    let time =
-        now.toLocaleString("uz-UZ");
-
-    document.getElementById("statusText").innerText =
-        "Yo‘l yakunlandi";
-
-    document.getElementById("tripStatus").innerText =
-        "Yakunlandi";
-
-    document.getElementById("finishTime").innerText =
-        time;
-
-    document.getElementById("message").innerText =
-        "🏁 Yo‘l muvaffaqiyatli yakunlandi.";
-
-    localStorage.setItem(
-        "pumps_finish",
-        time
-    );
-
-}
-
-
-// ============================
-// MANZILNI SAQLASH
-// ============================
-
-function saveAddress(){
-
-    let address =
-        document.getElementById("address").value.trim();
-
-    if(address === ""){
-
-        alert("Avval manzilni yozing!");
-
-        return;
-    }
-
-    localStorage.setItem(
-        "pumps_address",
-        address
-    );
-
-    showAddress();
-
-}
-
-
-// ============================
-// SAQLANGAN MANZILNI KO‘RSATISH
-// ============================
-
-function showAddress(){
-
-    let address =
-        localStorage.getItem("pumps_address");
-
-    let box =
-        document.getElementById("savedAddress");
-
-    if(address){
-
-        box.innerHTML =
-            "📍 <b>Keyingi manzil:</b><br>" +
-            address;
-
-        box.classList.remove("hidden");
-
-        document.getElementById("address").value =
-            address;
-
-    }
-
-}
-
-
-// ============================
-// XARITANI OCHISH
-// ============================
-
-function openMap(){
-
-    let address =
-        document.getElementById("address").value.trim();
-
-    if(address === ""){
-
-        address =
-            localStorage.getItem("pumps_address");
-
-    }
-
-    if(!address){
-
-        alert("Avval keyingi manzilni kiriting!");
-
-        return;
-    }
-
-    let url =
-        "https://www.google.com/maps/dir/?api=1&destination=" +
-        encodeURIComponent(address);
-
-    window.open(url,"_blank");
-
-}
-
-
-// ============================
-// MANZILNI TOZALASH
-// ============================
-
-function clearAddress(){
-
-    localStorage.removeItem("pumps_address");
-
-    document.getElementById("address").value = "";
-
-    document.getElementById("savedAddress")
-        .classList.add("hidden");
-
-}
-
-
-// ============================
-// OLDINGI HOLATNI YUKLASH
-// ============================
-
-function loadData(){
-
-    let start =
-        localStorage.getItem("pumps_start");
-
-    let finish =
-        localStorage.getItem("pumps_finish");
-
-    if(start){
-
-        document.getElementById("startTime").innerText =
-            start;
-
-    }
-
-    if(finish){
-
-        document.getElementById("finishTime").innerText =
-            finish;
-
-        document.getElementById("tripStatus").innerText =
-            "Yakunlandi";
-
-        document.getElementById("statusText").innerText =
-            "Yo‘l yakunlandi";
-
-    }
-
-    showAddress();
-
-}
-
-
-// Sahifa ochilganda
-
-loadData();
 
 </script>
 
