@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUMPA Driver</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef3f8;
+    color: #17202a;
+}
+
+.header {
+    background: #1674b8;
+    color: white;
+    text-align: center;
+    padding: 18px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header p {
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 520px;
+    margin: auto;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background: #999;
+    border-radius: 50%;
+}
+
+.dot.green {
+    background: #16a34a;
+}
+
+.dot.red {
+    background: #dc2626;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 13px;
+    padding: 17px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.start {
+    background: #1674b8;
+    color: white;
+}
+
+.finish {
+    background: #dc2626;
+    color: white;
+}
+
+.next {
+    background: #16a34a;
+    color: white;
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.info-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.info {
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.big-status {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.distance {
+    text-align: center;
+    font-size: 34px;
+    font-weight: bold;
+    color: #1674b8;
+    margin: 15px 0;
+}
+
+.message {
+    background: #edf7ff;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.hidden {
+    display: none;
+}
+
+.success {
+    color: #16a34a;
+}
+
+.warning {
+    color: #d97706;
+}
+
+.error {
+    color: #dc2626;
+}
+
+.footer {
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>🚐 PUMPA Driver</h1>
+    <p>Bog‘cha transport haydovchisi</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="status">
+            <span id="dot" class="dot"></span>
+            <span id="connectionText">Yo‘lga chiqilmagan</span>
+        </div>
+
+        <button
+            id="startBtn"
+            class="start"
+            onclick="startRoute()">
+            🚐 YO‘LGA CHIQDIM
+        </button>
+
+        <button
+            id="finishBtn"
+            class="finish hidden"
+            onclick="finishRoute()">
+            🏁 YO‘LNI YAKUNLASH
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="info-title">
+            📍 Joylashuv
+        </div>
+
+        <div class="info">
+            <div>
+                Latitude:
+                <b id="latitude">—</b>
+            </div>
+
+            <div>
+                Longitude:
+                <b id="longitude">—</b>
+            </div>
+
+            <div>
+                GPS:
+                <b id="gpsStatus">Ruxsat kerak</b>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="info-title">
+            🚐 Avtomobil holati
+        </div>
+
+        <div
+            id="routeStatus"
+            class="big-status">
+            Yo‘l boshlanmagan
+        </div>
+
+        <div
+            id="distance"
+            class="distance">
+            —
+        </div>
+
+        <div
+            id="driverMessage"
+            class="message">
+            “YO‘LGA CHIQDIM” tugmasini bosing.
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="info-title">
+            📍 Keyingi manzil
+        </div>
+
+        <div
+            id="nextAddress"
+            class="message">
+            Birinchi manzilni kutmoqda...
+        </div>
+
+        <button
+            id="nextBtn"
+            class="next hidden"
+            onclick="nextAddress()">
+            ➡️ KETDI — KEYINGI MANZIL
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="info-title">
+            🔔 Bildirishnomalar
+        </div>
+
+        <div
+            id="notificationStatus"
+            class="message">
+            Bildirishnomalar yoqilmagan.
+        </div>
+
+        <button
+            class="start"
+            onclick="enableNotifications()">
+            🔔 BILDIRISHNOMANI YOQISH
+        </button>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    PUMPA Kids Transport © 2026
+</div>
+
+
+<script>
+
+const API = "https://pumpa-transport.onrender.com";
+
+let routeStarted = false;
+let watchId = null;
+let lastNotification = "";
+let currentAddress = 1;
+
+
+/* =========================
+   BROWSER BILDIRISHNOMA
+========================= */
+
+async function enableNotifications() {
+
+    if (!("Notification" in window)) {
+
+        document.getElementById("notificationStatus").innerText =
+            "Bu brauzer bildirishnomani qo‘llab-quvvatlamaydi.";
+
+        return;
+    }
+
+    const permission =
+        await Notification.requestPermission();
+
+    if (permission === "granted") {
+
+        document.getElementById("notificationStatus").innerText =
+            "✅ Bildirishnomalar yoqildi.";
+
+        new Notification("PUMPA Driver", {
+            body: "Bildirishnomalar muvaffaqiyatli yoqildi."
+        });
+
+    } else {
+
+        document.getElementById("notificationStatus").innerText =
+            "❌ Bildirishnomaga ruxsat berilmadi.";
+    }
+}
+
+
+/* =========================
+   BILDIRISHNOMA
+========================= */
+
+function notify(title, message) {
+
+    if (!("Notification" in window)) {
+        return;
+    }
+
+    if (Notification.permission !== "granted") {
+        return;
+    }
+
+    const key = title + message;
+
+    if (key === lastNotification) {
+        return;
+    }
+
+    lastNotification = key;
+
+    new Notification(title, {
+        body: message
+    });
+}
+
+
+/* =========================
+   YO‘LGA CHIQISH
+========================= */
+
+async function startRoute() {
+
+    try {
+
+        const response = await fetch(
+            API + "/api/driver/start",
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            routeStarted = true;
+
+            document.getElementById("startBtn")
+                .classList.add("hidden");
+
+            document.getElementById("finishBtn")
+                .classList.remove("hidden");
+
+            document.getElementById("nextBtn")
+                .classList.remove("hidden");
+
+            document.getElementById("dot")
+                .className = "dot green";
+
+            document.getElementById("connectionText")
+                .innerText = "🟢 Yo‘l boshlandi";
+
+            document.getElementById("routeStatus")
+                .innerText = "🚐 YO‘LDA";
+
+            document.getElementById("driverMessage")
+                .innerText =
+                "Bog‘cha avtomobili yo‘lga chiqdi.";
+
+            notify(
+                "PUMPA Kids Transport",
+                "🚐 Bog‘cha avtomobili yo‘lga chiqdi. Tayyorlaning!"
+            );
+
+            startGPS();
+
+        }
+
+    } catch (error) {
+
+        alert(
+            "Server bilan bog‘lanib bo‘lmadi."
+        );
+
+        console.error(error);
+    }
+}
+
+
+/* =========================
+   GPS
+========================= */
+
+function startGPS() {
+
+    if (!navigator.geolocation) {
+
+        document.getElementById("gpsStatus")
+            .innerText =
+            "GPS mavjud emas";
+
+        return;
+    }
+
+    document.getElementById("gpsStatus")
+        .innerText =
+        "GPS aniqlanmoqda...";
+
+
+    watchId =
+        navigator.geolocation.watchPosition(
+
+            position => {
+
+                const lat =
+                    position.coords.latitude;
+
+                const lon =
+                    position.coords.longitude;
+
+
+                document.getElementById("latitude")
+                    .innerText =
+                    lat.toFixed(6);
+
+                document.getElementById("longitude")
+                    .innerText =
+                    lon.toFixed(6);
+
+                document.getElementById("gpsStatus")
+                    .innerText =
+                    "🟢 GPS ishlayapti";
+
+
+                sendLocation(lat, lon);
+
+            },
+
+            error => {
+
+                document.getElementById("gpsStatus")
+                    .innerText =
+                    "❌ GPS ruxsati kerak";
+
+                console.error(error);
+
+            },
+
+            {
+                enableHighAccuracy: true,
+                maximumAge: 3000,
+                timeout: 10000
+            }
+        );
+}
+
+
+/* =========================
+   SERVERGA GPS YUBORISH
+========================= */
+
+async function sendLocation(lat, lon) {
+
+    try {
+
+        await fetch(
+            API + "/api/driver/location",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    latitude: lat,
+                    longitude: lon
+                })
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "GPS yuborishda xato:",
+            error
+        );
+    }
+}
+
+
+/* =========================
+   KEYINGI MANZIL
+========================= */
+
+function nextAddress() {
+
+    currentAddress++;
+
+    document.getElementById("nextAddress")
+        .innerText =
+        "📍 " +
+        currentAddress +
+        "-manzilga yo‘l olindi.";
+
+    document.getElementById("routeStatus")
+        .innerText =
+        "🚐 KEYINGI MANZILGA KETYAPTI";
+
+    document.getElementById("driverMessage")
+        .innerText =
+        "Keyingi ota-ona manziliga harakatlaning.";
+
+    lastNotification = "";
+
+}
+
+
+/* =========================
+   YO‘LNI YAKUNLASH
+========================= */
+
+async function finishRoute() {
+
+    const confirmFinish =
+        confirm(
+            "Yo‘nalishni yakunlamoqchimisiz?"
+        );
+
+    if (!confirmFinish) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/driver/finish",
+                {
+                    method: "POST"
+                }
+            );
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            routeStarted = false;
+
+
+            if (watchId !== null) {
+
+                navigator.geolocation
+                    .clearWatch(watchId);
+
+                watchId = null;
+            }
+
+
+            document.getElementById("startBtn")
+                .classList.remove("hidden");
+
+            document.getElementById("finishBtn")
+                .classList.add("hidden");
+
+            document.getElementById("nextBtn")
+                .classList.add("hidden");
+
+
+            document.getElementById("dot")
+                .className = "dot red";
+
+            document.getElementById("connectionText")
+                .innerText =
+                "Yo‘l yakunlandi";
+
+
+            document.getElementById("routeStatus")
+                .innerText =
+                "🏁 YO‘L YAKUNLANDI";
+
+
+            document.getElementById("driverMessage")
+                .innerText =
+                "Bugungi yo‘nalish tugadi.";
+
+
+            notify(
+                "PUMPA Kids Transport",
+                "🏁 Bog‘cha avtomobili yo‘nalishni tugatdi."
+            );
+        }
+
+    } catch (error) {
+
+        alert(
+            "Server bilan bog‘lanishda xato."
+        );
+
+        console.error(error);
+    }
+}
+
+
+/* =========================
+   OTA-ONA MASOFASINI TEKSHIRISH
+========================= */
+
+async function checkDistance() {
+
+    if (!routeStarted) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/status"
+            );
+
+        const data =
+            await response.json();
+
+
+        const parent =
+            data.parent;
+
+        const driver =
+            data.driver;
+
+
+        if (
+            !parent ||
+            parent.latitude === null ||
+            driver.latitude === null
+        ) {
+            return;
+        }
+
+
+        const distance =
+            calculateDistance(
+                parent.latitude,
+                parent.longitude,
+                driver.latitude,
+                driver.longitude
+            );
+
+
+        document.getElementById("distance")
+            .innerText =
+            Math.round(distance) + " m";
+
+
+        /* 50 METR */
+
+        if (distance <= 50) {
+
+            document.getElementById("routeStatus")
+                .innerText =
+                "🚐 AVTOMOBIL KELDI";
+
+            document.getElementById("driverMessage")
+                .innerText =
+                "📢 Ota-onaga: Avtomobil keldi!";
+
+
+            notify(
+                "🚐 PUMPA Kids Transport",
+                "Avtomobil keldi!"
+            );
+
+        }
+
+        /* 500 METR */
+
+        else if (distance <= 500) {
+
+            document.getElementById("routeStatus")
+                .innerText =
+                "🔔 YAQINLASHDI";
+
+            document.getElementById("driverMessage")
+                .innerText =
+                "Ota-onaga avtomobil yaqinlashgani haqida xabar berildi.";
+
+
+            notify(
+                "🔔 PUMPA Kids Transport",
+                "Avtomobil 500 metr ichida!"
+            );
+
+        }
+
+        else {
+
+            document.getElementById("routeStatus")
+                .innerText =
+                "🚐 YO‘LDA";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Masofani tekshirish xatosi:",
+            error
+        );
+    }
+}
+
+
+/* =========================
+   MASOFA HISOBLASH
+========================= */
+
+function calculateDistance(
+    lat1,
+    lon1,
+    lat2,
+    lon2
+) {
+
+    const R = 6371000;
+
+    const p1 =
+        lat1 * Math.PI / 180;
+
+    const p2 =
+        lat2 * Math.PI / 180;
+
+    const dLat =
+        (lat2 - lat1) *
+        Math.PI / 180;
+
+    const dLon =
+        (lon2 - lon1) *
+        Math.PI / 180;
+
+
+    const a =
+        Math.sin(dLat / 2) *
+        Math.sin(dLat / 2) +
+
+        Math.cos(p1) *
+        Math.cos(p2) *
+
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+
+    const c =
+        2 *
+        Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
+
+
+    return R * c;
+}
+
+
+/* =========================
+   HAR 3 SONIYADA TEKSHIRISH
+========================= */
+
+setInterval(
+    checkDistance,
+    3000
+);
+
+</script>
+
+</body>
+</html>
