@@ -1,14 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from datetime import datetime
 from math import radians, sin, cos, sqrt, atan2
+from pathlib import Path
+
+
+# =========================================================
+# PUMPA KIDS TRANSPORT SERVER
+# =========================================================
 
 app = FastAPI(title="PUMPA Kids Transport")
 
-# =========================
+
+# =========================================================
 # CORS
-# =========================
+# =========================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,9 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================
-# HAYDOVCHI HOLATI
-# =========================
+
+# =========================================================
+# DRIVER HOLATI
+# =========================================================
 
 driver = {
     "online": False,
@@ -30,36 +39,36 @@ driver = {
     "last_update": None,
 }
 
-# =========================
-# OTA-ONA MANZILI
-# Hozircha sinov uchun
-# Keyinchalik ota-ona o'z GPSini beradi
-# =========================
+
+# =========================================================
+# OTA-ONA JOYLASHUVI
+# =========================================================
 
 parent = {
     "latitude": None,
     "longitude": None,
 }
 
-# =========================
+
+# =========================================================
 # XABARLAR
-# =========================
+# =========================================================
 
 notifications = []
 
 
-# =========================
+# =========================================================
 # GPS MODELI
-# =========================
+# =========================================================
 
 class Location(BaseModel):
     latitude: float
     longitude: float
 
 
-# =========================
-# MASOFA
-# =========================
+# =========================================================
+# MASOFANI HISOBLASH
+# =========================================================
 
 def distance_meters(lat1, lon1, lat2, lon2):
 
@@ -86,9 +95,33 @@ def distance_meters(lat1, lon1, lat2, lon2):
     return R * c
 
 
-# =========================
-# SERVER
-# =========================
+# =========================================================
+# DRIVER.HTML
+# =========================================================
+
+@app.get("/driver.html")
+def driver_page():
+
+    file_path = Path(__file__).parent / "driver.html"
+
+    return FileResponse(file_path)
+
+
+# =========================================================
+# DRIVER SAHIFASINI /driver ORQALI HAM OCHISH
+# =========================================================
+
+@app.get("/driver")
+def driver_page_short():
+
+    file_path = Path(__file__).parent / "driver.html"
+
+    return FileResponse(file_path)
+
+
+# =========================================================
+# SERVER HOLATI
+# =========================================================
 
 @app.get("/")
 def home():
@@ -100,9 +133,9 @@ def home():
     }
 
 
-# =========================
-# HAYDOVCHI YO'LGA CHIQDI
-# =========================
+# =========================================================
+# HAYDOVCHI YO‘LGA CHIQDI
+# =========================================================
 
 @app.post("/api/driver/start")
 def driver_start():
@@ -122,9 +155,9 @@ def driver_start():
     }
 
 
-# =========================
-# HAYDOVCHI YO'LINI TUGATDI
-# =========================
+# =========================================================
+# HAYDOVCHI YO‘LINI TUGATDI
+# =========================================================
 
 @app.post("/api/driver/finish")
 def driver_finish():
@@ -139,13 +172,13 @@ def driver_finish():
 
     return {
         "success": True,
-        "message": "Yo‘l yakunlandi"
+        "message": "🏁 Yo‘l yakunlandi"
     }
 
 
-# =========================
-# HAYDOVCHI GPS
-# =========================
+# =========================================================
+# HAYDOVCHI GPS JOYLASHUVI
+# =========================================================
 
 @app.post("/api/driver/location")
 def driver_location(data: Location):
@@ -161,9 +194,9 @@ def driver_location(data: Location):
     }
 
 
-# =========================
-# HAYDOVCHI GPSNI KO'RISH
-# =========================
+# =========================================================
+# HAYDOVCHI GPSINI KO‘RISH
+# =========================================================
 
 @app.get("/api/driver/location")
 def get_driver_location():
@@ -174,9 +207,9 @@ def get_driver_location():
     }
 
 
-# =========================
+# =========================================================
 # OTA-ONA GPS
-# =========================
+# =========================================================
 
 @app.post("/api/parent/location")
 def parent_location(data: Location):
@@ -190,14 +223,14 @@ def parent_location(data: Location):
     }
 
 
-# =========================
+# =========================================================
 # OTA-ONA HOLATI
-# =========================
+# =========================================================
 
 @app.get("/api/parent/status")
 def parent_status():
 
-    # Haydovchi yo'lga chiqmagan
+    # Haydovchi hali yo‘lga chiqmagan
     if not driver["on_route"]:
 
         return {
@@ -209,7 +242,8 @@ def parent_status():
             "message": "🚐 Bog‘cha avtomobili hali yo‘lga chiqmagan."
         }
 
-    # Haydovchi GPSi yo'q
+
+    # Haydovchining GPSi yo‘q
     if driver["latitude"] is None:
 
         return {
@@ -221,7 +255,8 @@ def parent_status():
             "message": "📡 Haydovchi GPSi aniqlanmoqda..."
         }
 
-    # Ota-ona GPSi yo'q
+
+    # Ota-onaning GPSi yo‘q
     if parent["latitude"] is None:
 
         return {
@@ -233,7 +268,8 @@ def parent_status():
             "message": "📍 Joylashuvingizni aniqlash kerak."
         }
 
-    # Masofa
+
+    # Masofani hisoblash
     distance = distance_meters(
         parent["latitude"],
         parent["longitude"],
@@ -243,7 +279,11 @@ def parent_status():
 
     distance = round(distance)
 
+
+    # =====================================================
     # 50 METR
+    # =====================================================
+
     if distance <= 50:
 
         status = "arrived"
@@ -253,7 +293,11 @@ def parent_status():
             "Farzandingizni olib chiqishingiz mumkin."
         )
 
+
+    # =====================================================
     # 500 METR
+    # =====================================================
+
     elif distance <= 500:
 
         status = "near"
@@ -263,7 +307,11 @@ def parent_status():
             "Tushishga shoshiling."
         )
 
-    # 500 metrdan uzoq
+
+    # =====================================================
+    # 500 METRDAN UZOQ
+    # =====================================================
+
     else:
 
         status = "on_route"
@@ -282,6 +330,7 @@ def parent_status():
                 f"🚐 Avtomobil {distance} metr uzoqlikda."
             )
 
+
     return {
         "success": True,
         "status": status,
@@ -294,9 +343,9 @@ def parent_status():
     }
 
 
-# =========================
+# =========================================================
 # XABARLAR
-# =========================
+# =========================================================
 
 @app.get("/api/notifications")
 def get_notifications():
@@ -307,9 +356,9 @@ def get_notifications():
     }
 
 
-# =========================
+# =========================================================
 # UMUMIY HOLAT
-# =========================
+# =========================================================
 
 @app.get("/api/status")
 def status():
